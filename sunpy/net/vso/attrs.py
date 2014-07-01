@@ -19,6 +19,8 @@ from __future__ import absolute_import
 
 from datetime import datetime
 
+from astropy import units as u
+
 from sunpy.time import TimeRange
 from sunpy.net.attr import (
     Attr, ValueAttr, AttrWalker, AttrAnd, AttrOr, DummyAttr, ValueAttr
@@ -57,10 +59,14 @@ class _Range(object):
 class Wave(Attr, _Range):
     def __init__(self, wavemin, wavemax):
         # TODO: raise if not quantities
+        convert = {'m': u.AA, 'Hz': u.GHz, 'eV': u.keV}
+        for k in convert.keys():
+            if wavemin.decompose().unit == u.Unit(k):
+                unit = convert[k]
         self.min, self.max = sorted(
-            value.to(wavemin.unit) for value in [wavemin, wavemax]
+            value.to(unit) for value in [wavemin, wavemax]
             )
-        self.unit = wavemin.unit
+        self.unit = unit
         
         Attr.__init__(self)
         _Range.__init__(self, self.min, self.max, self.__class__)
