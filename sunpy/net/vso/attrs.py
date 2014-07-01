@@ -265,6 +265,7 @@ walker.add_converter(Wave)(
     lambda x: ValueAttr({
             ('wave', 'wavemin'): x.min.value,
             ('wave', 'wavemax'): x.max.value,
+            ('wave', 'waveunit'): x.max.unit
     })
 )
 
