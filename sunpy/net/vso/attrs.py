@@ -55,11 +55,12 @@ class _Range(object):
 
 
 class Wave(Attr, _Range):
-    def __init__(self, wavemin, wavemax, waveunit='Angstrom'):
+    def __init__(self, wavemin, wavemax):
+        # TODO: raise if not quantities
         self.min, self.max = sorted(
-            to_angstrom(v, waveunit) for v in [float(wavemin), float(wavemax)]
-        )
-        self.unit = 'Angstrom'
+            value.to(wavemin.unit) for value in [wavemin, wavemax]
+            )
+        self.unit = wavemin.unit
         
         Attr.__init__(self)
         _Range.__init__(self, self.min, self.max, self.__class__)
@@ -68,7 +69,9 @@ class Wave(Attr, _Range):
         return isinstance(other, self.__class__)
 
     def __repr__(self):
-	return '<Wave({0!r}, {1!r}, {2!r})>'.format(self.min, self.max, self.unit)
+	return '<Wave({0!r}, {1!r}, {2!r})>'.format(self.min.value,
+                                                self.max.value,
+                                                str(self.unit))
 
 
 class Time(Attr, _Range):
@@ -260,8 +263,8 @@ walker.add_converter(_VSOSimpleAttr)(
 
 walker.add_converter(Wave)(
     lambda x: ValueAttr({
-            ('wave', 'wavemin'): x.min,
-            ('wave', 'wavemax'): x.max,
+            ('wave', 'wavemin'): x.min.value,
+            ('wave', 'wavemax'): x.max.value,
             ('wave', 'waveunit'): x.unit,
     })
 )
