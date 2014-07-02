@@ -16,7 +16,7 @@ class DiffRotTest(unittest.TestCase):
         
     def test_array(self):
         rot = diff_rot(10, np.linspace(-70, 70, 2) * u.deg)
-        self.failUnless(np.array_equal(rot, np.array([110.2725,  110.2725]) * u.deg))
+        self.failUnless(np.array_equal(rot, np.array([110.2725, 110.2725]) * u.deg))
         
     def test_synodic(self):
         rot = diff_rot(10, 30 * u.deg, rot_type='howard', frame_time='synodic')
