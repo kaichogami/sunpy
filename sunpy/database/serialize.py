@@ -3,8 +3,6 @@ from datetime import datetime
 import json
 from astropy import units as u
 
-import astropy
-
 from sunpy.net import vso
 from sunpy.database import attrs as db_attrs
 from sunpy.net.attr import Attr, AttrOr, AttrAnd

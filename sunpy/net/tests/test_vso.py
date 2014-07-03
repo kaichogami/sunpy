@@ -9,10 +9,6 @@ import datetime
 import pytest
 from astropy import units as u
 
-from numpy.testing import assert_array_almost_equal
-
-from astropy import units as u
-
 from sunpy.time import TimeRange
 from sunpy.net import vso
 from sunpy.net.vso import attrs as va
