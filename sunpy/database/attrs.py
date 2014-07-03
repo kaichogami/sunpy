@@ -203,8 +203,8 @@ def _create(wlk, root, session):
         elif typ == 'wave':
             wavemin, wavemax, waveunit = value
             query = query.filter(and_(
-                DatabaseEntry.wavemin >= wavemin.value,
-                DatabaseEntry.wavemax <= wavemax.value))
+                DatabaseEntry.wavemin >= wavemin,
+                DatabaseEntry.wavemax <= wavemax))
         elif typ == 'time':
             start, end, near = value
             query = query.filter(and_(
