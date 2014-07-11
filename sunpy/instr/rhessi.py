@@ -377,14 +377,9 @@ def backprojection(calibrated_event_list, pixel_size=(1.,1.) * u.arcsec, image_d
     detector_list = (np.arange(9)+1) * np.array(det_index_mask)
     for detector in detector_list:
         if detector > 0:
-<<<<<<< HEAD
-            image = image + _backproject(calibrated_event_list, detector=detector, pixel_size=pixel_size, image_dim=image_dim)
-
-=======
             image = image + _backproject(calibrated_event_list, detector=detector, pixel_size=pixel_size.value
 										 , image_dim=image_dim.value)
-    
->>>>>>> e84bbafdb4946d244736bdfe8cdcac7b3bc8ac33
+
     dict_header = {
         "DATE-OBS": time_range.center().strftime("%Y-%m-%d %H:%M:%S"),
         "CDELT1": pixel_size[0],
