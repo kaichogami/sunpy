@@ -331,14 +331,14 @@ Dimension:\t [%d, %d]
         """Heliographic latitude in degrees"""
         heliographic_latitude = self.meta.get('hglt_obs',
                                               self.meta.get('crlt_obs',
-                                                            self.meta.get('solar_b0', None)))
+                                                            self.meta.get('solar_b0', None))) * u.deg
 
         if heliographic_latitude is None:
             warnings.warn_explicit("Missing metadata for heliographic latitude: assuming Earth-based observer",
                                    Warning, __file__, inspect.currentframe().f_back.f_lineno)
-            heliographic_latitude = (sun.heliographic_solar_center(self.date))[1].value
+            heliographic_latitude = (sun.heliographic_solar_center(self.date))[1]
 
-        return heliographic_latitude * u.deg
+        return heliographic_latitude
 
     @property
     def heliographic_longitude(self):
@@ -595,7 +595,7 @@ Dimension:\t [%d, %d]
         return new_map
 
     def rotate(self, angle=None, rmatrix=None, order=3, scale=1.0,
-               image_center=np.array([0,0]) * u.arcsec, recenter=False, missing=0.0, use_scipy=False):
+               image_center=[0,0] * u.arcsec, recenter=False, missing=0.0, use_scipy=False):
         """
         Returns a new rotated and rescaled map.  Specify either a rotation
         angle or a rotation matrix, but not both.  If neither an angle or a
@@ -906,7 +906,7 @@ Dimension:\t [%d, %d]
 
 # #### Visualization #### #
 
-    def draw_grid(self, axes=None, grid_spacing=15*u.deg, **kwargs):   #Manual check again
+    def draw_grid(self, axes=None, grid_spacing=15*u.deg, **kwargs):
         """Draws a grid over the surface of the Sun
 
         Parameters

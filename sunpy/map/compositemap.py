@@ -246,7 +246,8 @@ class CompositeMap(object):
             Axes to plot limb on or None to use current axes.
         
         grid_spacing: `~astropy.units.Quantity` instance
-            Spacing (in degrees) for longitude and latitude grid.
+            Angular spacing for heliographic longitude and 
+            latitude grid.
 
         Returns
         -------
