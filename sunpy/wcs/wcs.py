@@ -477,7 +477,7 @@ def convert_hpc_hg(x, y, b0_deg=0 * u.deg, l0_deg=0 * u.deg, dsun_meters=None):
 def proj_tan(x, y, force=False):
     """Applies the gnomonic (TAN) projection to intermediate relative
     coordinates. This function is not currently implemented!"""
-    # if pixels are within 3 degrees of the Sun then skip the calculatin unless
+    # if pixels are within 3 degrees of the Sun then skip the calculation unless
     # force is True. This applies to all sdo images so this function is just
     # here as a place holder for the future
     # TODO: write proj_tan function

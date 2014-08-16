@@ -463,50 +463,32 @@ Dimension:\t [%d, %d]
 
 # #### Data conversion routines #### #
 
-    def data_to_pixel(self, value, dim):
-        """Convert pixel-center data coordinates to pixel values"""
-        #TODO: This function should be renamed. It is confusing as data
-        # coordinates are in something like arcsec but this function just changes how you
-        # count pixels
-        if not isinstance(value, u.Quantity):
-            raise ValueError("Must be astropy.units instance")
-        if dim not in ['x', 'y']:
-            raise ValueError("Invalid dimension. Must be one of 'x' or 'y'.")
+    def data_to_pixel(self, sky):
+        """Takes in a skycoord object and converts it to the coordinate
+           system given in the wcs object, finally using astropy.wcs to
+           convert it into pixels."""
 
-        size = self.shape[dim == 'x']  # 1 if dim == 'x', 0 if dim == 'y'.
+        if not isinstance(sky, SkyCoord):
+            raise ValueError("Must be a astropy.SkyCoord object")
+        # TODO: Should have ability to accept all coordinate frame
+        # TODO: create a mapping for frame strings in wcs and 
+        #       coordinate classes
+        coord = [(sky.transform_to(self.wcs.coordinate.ctype)).Tx,
+                 (sky.transform_to(self.wcs.coordinate.ctype)).Ty,
+                 (sky.transform_to(self.wcs.coordinate.ctype)).distance]
+        return self.wcs.world2pix(coord,1)
 
-        return np.array((value.value - self.center[dim].value) / self.scale[dim].value + ((size.value - 1) / 2.)) * u.pix
-        
-    def pixel_to_data(self, x=None, y=None):
-        """Convert from pixel coordinates to data coordinates (e.g. arcsec)"""
-        if (x is not None) and not (isinstance(x, u.Quantity)):
-            raise ValueError("Must be astropy.units instance")
-        if (y is not None) and not (isinstance(y, u.Quantity)):
-            raise ValueError("Must be astropy.units instance")
-        width = self.shape[1]
-        height = self.shape[0]
+    def pixel_to_data(self, sky):
+        """Takes a skycoord object with pixel values and converts it to
+           the system given in the wcs object, returning the world 
+           coordinates."""
 
-        if (x is not None) and (x.value > width.value-1):
-            raise ValueError("X pixel value larger than image width (%s)." % width)
-        if (x is not None) and (y.value > height.value-1):
-            raise ValueError("Y pixel value larger than image height (%s)." % height)
-        if (x is not None) and (x.value < 0):
-            raise ValueError("X pixel value cannot be less than 0.")
-        if (x is not None) and (y.value < 0):
-            raise ValueError("Y pixel value cannot be less than 0.")
-
-        scale = np.array([self.scale['x'].value, self.scale['y'].value]) \
-                * u.Unit(self.scale['x'].unit)
-        crpix = np.array([self.reference_pixel['x'].value, 
-                          self.reference_pixel['y'].value]) \
-                * u.Unit(self.reference_pixel['x'].unit)
-        crval = np.array([self.reference_coordinate['x'].value, 
-                         self.reference_coordinate['y'].value]) \
-                * u.Unit(self.reference_coordinate['x'].unit)
-        coordinate_system = [self.coordinate_system['x'], self.coordinate_system['y']]
-        x,y = wcs.convert_pixel_to_data(self.shape, scale, crpix, crval, x = x, y = y)
-
-        return x, y
+        if not isinstance(sky, SkyCoord):
+            raise ValueError("Must be astropy.SkyCoord object")
+        coord = [(sky.transform_to(self.wcs.coordinate.ctype)).Tx,
+                 (sky.transform_to(self.wcs.coordinate.ctype)).Ty,
+                 (sky.transform_to(self.wcs.coordinate.ctype)).distance]
+        return self.wcs.pix2world(coord,1)
 
 # #### I/O routines #### #
 
